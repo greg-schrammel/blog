@@ -1,0 +1,14 @@
+/* purgecss start ignore */
+@tailwind base;
+/* purgecss end ignore */
+
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply bg-bg;
+}
+
+::selection {
+  background-color: #41309e84;
+}
