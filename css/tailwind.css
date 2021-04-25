@@ -10,5 +10,6 @@ html {
 }
 
 ::selection {
-  background-color: #41309e84;
+  background-color: #6824fbd4;
+  color: white;
 }

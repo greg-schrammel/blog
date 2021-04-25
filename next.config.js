@@ -68,16 +68,36 @@ module.exports = withBundleAnalyzer({
           use: mdx,
         },
         {
+          resourceQuery: /preview/,
+          use: [
+            ...mdx,
+            createLoader(function (src) {
+              if (src.includes('<!--more-->')) {
+                const [preview] = src.split('<!--more-->')
+                return this.callback(null, preview)
+              }
+
+              const [preview] = src.split('<!--/excerpt-->')
+              return this.callback(null, preview.replace('<!--excerpt-->', ''))
+            }),
+          ],
+        },
+        {
           use: [
             ...mdx,
             createLoader(function (src) {
               const content = [
-                'import Post from "components/post";',
+                'import Post from "components/post"',
+                // 'export { getStaticProps } from "@/getStaticProps"',
                 src,
                 'export default Post',
               ].join('\n')
 
-              return this.callback(null, content.split('<!--more-->').join('\n'))
+              if (content.includes('<!--more-->')) {
+                return this.callback(null, content.split('<!--more-->').join('\n'))
+              }
+
+              return this.callback(null, content.replace(/<!--excerpt-->.*<!--\/excerpt-->/s, ''))
             }),
           ],
         },

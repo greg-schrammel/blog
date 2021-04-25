@@ -26,5 +26,5 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/_document.tsx"  ]
+, "pages/_document.tsx", "lib/getAllPosts.js"  ]
 }
