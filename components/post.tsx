@@ -27,6 +27,7 @@ export default function Post({ children, meta }) {
           description={meta.description}
           image={meta.image}
           path={router.pathname}
+          largeImage={meta.largeImage}
         />
       </Head>
       <div className="py-12">

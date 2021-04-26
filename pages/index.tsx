@@ -10,7 +10,13 @@ export default function all() {
   return (
     <main className="max-w-screen-md mx-auto px-6">
       <Head>
-        <Meta title="blog do gregory" description="acho que é um blog" image="/thumb.png" path="" />
+        <Meta
+          title="blog do gregory"
+          description="acho que é um blog"
+          image={`/thumb.png`}
+          path=""
+          largeImage
+        />
       </Head>
       <h1 className="text-lg font-bold mt-20 mb-8">gregs</h1>
       <ul className="">
