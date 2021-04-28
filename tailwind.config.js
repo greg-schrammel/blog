@@ -47,7 +47,7 @@ module.exports = {
         card: '#999',
         accent1: 'black',
         accent2: '#292929',
-        link: '#68f4ac',
+        link: '#6824fb',
         code: {
           green: '#b5f4a5',
           yellow: '#ffe484',
@@ -102,5 +102,5 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [require('@tailwindcss/ui'), require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography')],
 }
