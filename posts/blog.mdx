@@ -1,0 +1,145 @@
+---
+  date: '05/02/2021'
+  title: 'fazendo um blog com Nextjs, MDX, Tailwind'
+---
+
+## fazendo um blog com Nextjs, MDX, Tailwind
+
+hj implementei um feed rss aqui entao vou falar um pouco sobre como fiz esse blog,  
+se quiser o feed rss é `gregs.vercel.app/feed.xml`
+
+to usando [Nextjs](https://nextjs.org/) que é um framework pra [React](https://reactjs.org/),
+os posts são em [mdx](https://mdxjs.com/) que é tipo markdown mas aceita colocar componentes react no meio,  
+e [tailwind](https://tailwindcss.com/) uma lib de css utils, pra fazer os style rapidao
+
+os posts sao renderizados no server e servidos staticamente (beem facil fazer com nextjs),
+faço deploy com [vercel](https://vercel.com/), por ser statico fica td na edge em cache
+nunca precisa bater num server
+
+o codigo é bem simples, a arquitetura ta assim agr  
+next usa a pasta `pages` como as rotas do app, rotas com [] sao dinamicas
+
+```
+├── public
+│   ├── favicon.png
+│   └── assets // largo imagem e etc
+├── pages
+│   ├── _app.tsx
+│   └── [slug].tsx // rota dinamica, pagina dos posts em si
+│   └── index.tsx // tem uma lista dos ultimos posts
+│   └── 404.tsx // se tentar acessar algo que n existe, meti uma mensagem personalizada
+├── posts
+│   ├── slug_do_post.mdx
+├── lib
+│   ├── post.ts
+│   └── rss.ts
+├── components
+│   └── ...
+├── tailwind.config.js
+```
+
+o codigo ta no github [aqui](https://github.com/greg-schrammel/blog)
+
+### pagina principal
+
+se exportar uma função `getStaticProps` next vai pré renderizar a pagina no build,  
+ou seja ja transformar em html pronta, dependendo do que fizer nem vai js pro browser
+
+```jsx
+// index.tsx
+
+export const getStaticProps: GetStaticProps<{ allPosts: Post[] }> = async (ctx) => {
+  const allPosts = getAllPosts(['title', 'date', 'slug'])
+  const allPostsSorted = allPosts.sort((a, b) =>
+    new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1,
+  )
+
+  // deixei aqui, mas poderia colocar no script de build no packge.json
+  // e n tenho um bom motivo pra isso
+  generateRSSFeed()
+
+  return {
+    props: { allPosts: allPostsSorted },
+  }
+}
+
+// next usa o export default como o componente que vai renderizar na rota, essa é index ou seja '/'
+export default function All({ allPosts }: { allPosts: Post[] }) {
+  ...
+
+```
+
+### pagina do post
+
+pra pré renderizar paginas com rotas dinamicas se exporta um `getStaticPaths`, só retornar os endereços que quer
+
+```jsx
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { slug: 'slug do post ha ser pré renderizado' } }],
+  }
+}
+```
+
+pra renderizar mdx to usando [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote)  
+a lib exporta duas funções `renderToString` que transforma uma string mdx, tipo `# oi ` em `<h1>oi</> `,  
+e `hydrate` que 'hidrata' esse html no client se precisar, com os componentes e tal
+
+```jsx
+// [slug].tsx
+
+export async function getStaticPaths() {
+  const posts = getAllPosts(['slug']) // aqui eu pego só os slug dos posts que é o que precisa pra rota
+  return {
+    paths: posts.map((post) => ({ params: { slug: post.slug } })),
+    fallback: false,
+  }
+}
+
+export async function getStaticProps({ params }) {
+  const post = getPostBySlug(params.slug, ['title', 'date', 'slug', 'image', 'content']) // aqui pego tds as info do post dai
+  const content = await renderToString(post.content, { components })
+  return {
+    props: {
+      ...post,
+      content,
+    },
+  }
+}
+
+export default function Post({ title, date, slug, image, content }) {
+  ...
+  <div className="prose max-w-none mt-6 md:mt-10 pb-8">{hydrate(content)}</div>
+  ...
+```
+
+### como pegar os posts
+
+pra ter coisas mais meta nos posts (tipo a data que foi escrito e tal),
+to usando a lib [gray-matter](https://github.com/jonschlinkert/gray-matter), que deixa fazer coisas assim
+
+```md
+---
+  date: '05/02/2021'
+  title: 'blabla'
+---
+
+## titulo
+
+... resto do post aqui
+```
+
+ela extrai `date` e `title` separado do conteudo post em si
+
+como os posts estao em uma pasta (`posts`), eu leio os arquivos direto de la, assim nao preciso atualizar
+nada a mais alem do arquivo do post em si
+
+da pra trocar esses readFile por um fetch pro CMS e gg funciona igual
+
+```js
+const fullPath = join(postsDirectory, `${slug}.mdx`)
+const fileContents = fs.readFileSync(fullPath, 'utf8')
+const { data, content } = matter(fileContents)
+```
+
+sla acho que é isso ai, nao sei mais o que explicar, se quiser fazer um blog pode clonar meu repo e mudar como quiser

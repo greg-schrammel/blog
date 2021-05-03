@@ -1,40 +1,36 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
-import Head from 'next/head'
 import Link from 'next/link'
 import renderToString from 'next-mdx-remote/render-to-string'
 import hydrate from 'next-mdx-remote/hydrate'
 import { getAllPosts, getPostBySlug } from 'lib/post'
 import Meta from 'components/meta'
 import { Emoji } from 'components/emoji'
+import prism from 'remark-prism'
 
-export const components = {
-  // pre: ({ className, ...props }) => (
-  //   <pre className={`${className} rounded-md bg-card py-3 px-4 overflow-x-auto`} {...props} />
-  // ),
-  // 'pre.code': ({ className, ...props }) => (
-  //   <code className={`${className} text-gray-200`} {...props} />
-  // ),
+const components = {
+  // pre: (props) => <pre {...props} className="border-none" />,
 }
 
 export async function getStaticPaths() {
   const posts = getAllPosts(['slug'])
 
   return {
-    paths: posts.map((post) => {
-      return {
-        params: {
-          slug: post.slug,
-        },
-      }
-    }),
+    paths: posts.map((post) => ({
+      params: {
+        slug: post.slug,
+      },
+    })),
     fallback: false,
   }
 }
 
 export async function getStaticProps({ params }) {
   const post = getPostBySlug(params.slug, ['title', 'date', 'slug', 'image', 'content'])
-  const content = await renderToString(post.content, { components })
+  const content = await renderToString(post.content, {
+    components,
+    mdxOptions: { remarkPlugins: [prism] },
+  })
   return {
     props: {
       ...post,
@@ -51,9 +47,7 @@ export default function Post({ title, date, slug, image, content }) {
   const hydratedContent = hydrate(content, { components })
   return (
     <article className="max-w-screen-md mx-auto p-6">
-      <Head>
-        <Meta title={title} image={image} cardType="summary" path={router.pathname} />
-      </Head>
+      <Meta title={title} image={image} cardType="summary" path={router.pathname} />
       <Link href="/">
         <a className="text-md font-semibold text-accent2">
           <Emoji label="rainbow" emoji="🌈" />

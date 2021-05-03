@@ -32,4 +32,8 @@ yarn-error.log*
 
 .vercel
 
+/public/atom.xml
+/public/feed.xml
+/public/feed.json
+
 /drafts
