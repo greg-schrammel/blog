@@ -41,7 +41,7 @@ export default function All({ allPosts }: { allPosts: Post[] }) {
               <Link href={`/${slug}`} passHref>
                 <a>
                   <div className="flex flex-col">
-                    <h1 className="py-1 text-lg font-medium text-accent1">{title}</h1>
+                    <h1 className="py-1 text-lg font-semibold text-accent1">{title}</h1>
                     <time dateTime={date} className="text-accent2 text-md">
                       {new Date(date).toLocaleString('pt-br', {
                         month: 'long',

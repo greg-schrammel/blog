@@ -11,5 +11,5 @@ pre[class*='language-'] {
   line-height: 1.5;
   hyphens: none;
   border: none;
-  padding: 0;
+  padding: 0 1rem;
 }

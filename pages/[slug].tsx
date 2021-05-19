@@ -3,13 +3,16 @@ import ErrorPage from 'next/error'
 import Link from 'next/link'
 import renderToString from 'next-mdx-remote/render-to-string'
 import hydrate from 'next-mdx-remote/hydrate'
+import prism from 'remark-prism'
+
 import { getAllPosts, getPostBySlug } from 'lib/post'
 import Meta from 'components/meta'
 import { Emoji } from 'components/emoji'
-import prism from 'remark-prism'
+import { Audio } from 'components/audio'
 
 const components = {
   // pre: (props) => <pre {...props} className="border-none" />,
+  Audio,
 }
 
 export async function getStaticPaths() {
@@ -47,7 +50,12 @@ export default function Post({ title, date, slug, image, content }) {
   const hydratedContent = hydrate(content, { components })
   return (
     <article className="max-w-screen-md mx-auto p-6">
-      <Meta title={title} image={image} cardType="summary" path={router.pathname} />
+      <Meta
+        title={title}
+        image={image}
+        cardType={image ? 'summary_large_image' : 'summary'}
+        path={router.pathname}
+      />
       <Link href="/">
         <a className="text-md font-semibold text-accent2">
           <Emoji label="rainbow" emoji="🌈" />
