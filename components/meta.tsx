@@ -1,11 +1,11 @@
 import Head from 'next/head'
 
 const url = process.env.URL
-const twitterHandle = '@O_Super_Gregory'
+const twitterHandle = '@___gregs'
 
 export default function Meta({
   title = 'greg',
-  image = '/favicon.png',
+  image = '/thumb.png',
   description = '',
   path,
   cardType = 'summary',

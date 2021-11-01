@@ -7,12 +7,12 @@ const siteUrl = process.env.URL
 
 const author = {
   name: 'greg',
-  link: 'https://twitter.com/@O_Super_Gregory',
+  link: 'https://twitter.com/@___gregs',
 }
 
 const feed = new Feed({
-  title: 'blog do gregory',
-  description: 'eu escrevo algo aleatório todos os dias',
+  title: 'greg',
+  description: `I write about code sometimes`,
   id: siteUrl,
   link: siteUrl,
   language: 'pt-br',

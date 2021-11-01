@@ -9,6 +9,7 @@ import { getAllPosts, getPostBySlug } from 'lib/post'
 import Meta from 'components/meta'
 import { Emoji } from 'components/emoji'
 import { Audio } from 'components/audio'
+import { Greg } from 'components/🌈greg✨'
 
 const components = {
   // pre: (props) => <pre {...props} className="border-none" />,
@@ -56,17 +57,11 @@ export default function Post({ title, date, slug, image, content }) {
         cardType={image ? 'summary_large_image' : 'summary'}
         path={router.pathname}
       />
-      <Link href="/">
-        <a className="text-md font-semibold text-accent2">
-          <Emoji label="rainbow" emoji="🌈" />
-          <span className="mx-2">greg</span>
-          <Emoji label="sparkles" emoji="✨" />
-        </a>
-      </Link>
+      <Greg />
       <div className="py-6">
         {/* <h1 className="text-xl text-white font-bold"></h1> */}
         <div className="prose max-w-none mt-6 md:mt-10 pb-8">{hydratedContent}</div>
-        <time className="text-sm text-accent2" dateTime={date}>
+        <time className="text-sm text-gray-500" dateTime={date}>
           {new Date(date).toLocaleString('pt-br', {
             month: 'long',
             day: 'numeric',

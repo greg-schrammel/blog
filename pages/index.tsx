@@ -5,9 +5,10 @@ import Meta from 'components/meta'
 import { getAllPosts, Post } from 'lib/post'
 import { generateRSSFeed } from 'lib/rss'
 import { Emoji } from 'components/emoji'
+import { Greg } from 'components/🌈greg✨'
 
 export const getStaticProps: GetStaticProps<{ allPosts: Post[] }> = async (ctx) => {
-  const allPosts = getAllPosts(['title', 'date', 'slug'])
+  const allPosts = getAllPosts(['title', 'date', 'slug', 'tags'])
   const allPostsSorted = allPosts.sort((a, b) =>
     new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1,
   )
@@ -21,7 +22,7 @@ export const getStaticProps: GetStaticProps<{ allPosts: Post[] }> = async (ctx) 
 
 export default function All({ allPosts }: { allPosts: Post[] }) {
   return (
-    <main className="max-w-screen-md mx-auto px-6 py-14">
+    <main className="max-w-screen-md mx-auto p-6">
       <Meta
         title="blog do gregory"
         description="eu escrevo algo aleatório todos os dias"
@@ -29,20 +30,17 @@ export default function All({ allPosts }: { allPosts: Post[] }) {
         path="/"
         cardType="summary_large_image"
       />
-      <h1 className="text-xl font-semibold mb-8">
-        <Emoji label="rainbow" emoji="🌈" />
-        <span className="mx-2">greg</span>
-        <Emoji label="sparkles" emoji="✨" />
-      </h1>
-      <ul className="">
+
+      <Greg />
+      <ul className="my-12">
         {allPosts.map(({ slug, date, title }) => {
           return (
-            <li key={slug} className="py-5">
+            <li key={slug} className="rounded-xl my-6 cursor-pointer hover:opacity-60 w-auto">
               <Link href={`/${slug}`} passHref>
                 <a>
                   <div className="flex flex-col">
-                    <h1 className="py-1 text-lg font-semibold text-accent1">{title}</h1>
-                    <time dateTime={date} className="text-accent2 text-md">
+                    <h1 className="mb-1 text-regular font-semibold text-accent1">{title}</h1>
+                    <time dateTime={date} className=" text-gray-500 text-sm">
                       {new Date(date).toLocaleString('pt-br', {
                         month: 'long',
                         day: 'numeric',

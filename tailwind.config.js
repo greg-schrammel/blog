@@ -44,7 +44,7 @@ module.exports = {
         dark_accent2: '#cacaca',
         // dark_accent2: '#b3b3b3',
         bg: 'white',
-        card: '#999',
+        card: 'rgb(241 241 241)',
         accent1: 'black',
         accent2: '#292929',
         link: '#6824fb',
