@@ -37,18 +37,16 @@ export default function All({ allPosts }: { allPosts: Post[] }) {
           return (
             <li key={slug} className="rounded-xl my-6 cursor-pointer hover:opacity-60 w-auto">
               <Link href={`/${slug}`} passHref>
-                <a>
-                  <div className="flex flex-col">
-                    <h1 className="mb-1 text-regular font-semibold text-accent1">{title}</h1>
-                    <time dateTime={date} className=" text-gray-500 text-sm">
-                      {new Date(date).toLocaleString('pt-br', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </time>
-                  </div>
-                </a>
+                <div className="flex flex-col">
+                  <h1 className="mb-1 text-regular font-semibold text-accent1">{title}</h1>
+                  <time dateTime={date} className=" text-gray-500 text-sm">
+                    {new Date(date).toLocaleString('pt-br', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </time>
+                </div>
               </Link>
             </li>
           )
